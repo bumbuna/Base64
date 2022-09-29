@@ -1,0 +1,33 @@
+# BASE64
+
+A BASE64 encoder/decode library and executable.
+
+## BUILDING
+BASE64 uses CMake as its build system.
+
+```bash
+$ git clone https://github.com/devbumbuna/BASE64
+$ cd BASE64
+$ cmake -B build
+$ cmake --build build
+```
+## INSTALLING
+while inside the project repository run the following command(s).
+```bash
+$ cmake --install build
+```
+> **NOTE**: You may need to run the above command with admin privileges.
+
+## USAGE
+
+- executable
+```bash
+$ base64e [option] <file> ...
+--encode, -e
+```
+
+- library
+```c
+include <base64.h>
+
+base64Encode();
