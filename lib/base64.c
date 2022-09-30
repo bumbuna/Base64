@@ -33,25 +33,27 @@ int base64Encode(int (*inFun)(unsigned char *, int *),
     if (i == 0)
       break;
     unsigned char *c = (void *)&x;
+    int swap = 0;
+    int rshift = 8;
     if (i == 1)
-      x <<= 16;
+      rshift += 16;
     else if (i == 2) {
-      c[0] ^= c[1];
-      c[1] ^= c[0];
-      c[0] ^= c[1];
-      x <<= 8;
+      swap = 1;
+      rshift += 8;
     } else {
-      c[2] ^= c[0];
-      c[0] ^= c[2];
-      c[2] ^= c[0];
+      swap = 2;
     }
-    x <<= 8;
-    char out[4];
+    if (swap) {
+      c[0] ^= c[swap];
+      c[swap] ^= c[0];
+      c[0] ^= c[swap];
+    }
+    x <<= rshift;
+    char out[4] = {0,0,'=','='};
     unsigned int a = 0xfc000000;
-    for (int j = 0; j < 4; j++) {
+    for (int j = 0; j < (i == 1 ? 2 : i == 2 ? 3 : 4); j++) {
       unsigned int k = x & a;
       k >>= 26;
-      // k--;
       if (k >= 0 && k < 26) {
         out[j] = 'A' + k;
       } else if (k >= 26 && k < 52) {
@@ -64,12 +66,6 @@ int base64Encode(int (*inFun)(unsigned char *, int *),
         out[j] = '/';
       }
       x <<= 6;
-    }
-    if (i != 3) {
-      out[3] = '=';
-    }
-    if (i == 1) {
-      out[2] = '=';
     }
     (*outFun)(out, 4);
   }

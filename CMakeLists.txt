@@ -11,7 +11,7 @@ target_link_libraries(base64e base64)
 enable_testing()
 
 function(base64test str fname)
-		file(WRITE ${fname} ${str})
+		file(WRITE ${CMAKE_BINARY_DIR}/${fname} ${str})
 		execute_process(COMMAND base64 ${fname}
 						OUTPUT_VARIABLE out
 				)
