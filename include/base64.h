@@ -25,3 +25,5 @@
   * Encode data
   */
 int base64Encode(int(*in)(unsigned char *, int *), int (*out)(char *, int));
+
+int base64Decode(int (*in)(unsigned char *, int *), int (*out)(char *, int));

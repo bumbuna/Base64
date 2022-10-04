@@ -21,6 +21,7 @@
  *
  */
 #include "../include/base64.h"
+#include <ctype.h>
 
 int base64Encode(int (*inFun)(unsigned char *, int *),
                  int (*outFun)(char *, int)) {
@@ -49,7 +50,7 @@ int base64Encode(int (*inFun)(unsigned char *, int *),
       c[0] ^= c[swap];
     }
     x <<= rshift;
-    char out[4] = {0,0,'=','='};
+    char out[4] = {0, 0, '=', '='};
     unsigned int a = 0xfc000000;
     for (int j = 0; j < (i == 1 ? 2 : i == 2 ? 3 : 4); j++) {
       unsigned int k = x & a;
@@ -68,6 +69,53 @@ int base64Encode(int (*inFun)(unsigned char *, int *),
       x <<= 6;
     }
     (*outFun)(out, 4);
+  }
+  return 0;
+}
+
+int base64Decode(int (*inFun)(unsigned char *, int *),
+                  int (*outFun)(char *, int)) {
+  while (1) {
+    unsigned char buf[4];
+    int bufLen = 4;
+    int r = (*inFun)(buf, &bufLen);
+    if (r == -1) {
+      return -1; // error
+    }
+    if (bufLen == 0) {
+      return 0; // success
+    }
+    if (buf[2] == '=') {
+      buf[2] = 0;
+    }
+    if (buf[3] == '=') {
+      buf[3] = 0;
+    }
+    unsigned int a = 0;
+    for (int i = 0; i < 4; i++) {
+      unsigned int o = 0;
+      if (isupper(buf[i])) {
+        o = buf[i] - 'A';
+      } else if (islower(buf[i])) {
+        o = buf[i] - 'a'+26;
+      }else if(isdigit(buf[i])){
+        o = buf[i]-'0'+52;
+      } else if (buf[i] == '+') {
+        o = 62;
+      } else if (buf[i] == '/') {
+        o = 63;
+      }
+//       o <<= 2;
+      o <<= ((3 - i) * 6);
+      a |= o;
+    }
+
+    unsigned char *c = (void *)&a;
+    char res[3] = {0, 0, 0};
+    for (int i = 0; i < 3; i++) {
+      res[2 - i] = c[i];
+    }
+    (*outFun)(res, 3);
   }
   return 0;
 }

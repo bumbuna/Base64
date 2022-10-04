@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
 		}
 		outFun(argv[i], strlen(argv[1]));
 		outFun(": ", 2);
-		base64Encode(inFun, outFun);
+		base64Decode(inFun, outFun);
 		outFun("\n", 1);
 	}
         return 0;
