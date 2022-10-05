@@ -21,6 +21,7 @@
  *
  */
 
+#include "base64config.h"
 /*
   * Encode data
   */

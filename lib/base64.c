@@ -105,7 +105,6 @@ int base64Decode(int (*inFun)(unsigned char *, int *),
       } else if (buf[i] == '/') {
         o = 63;
       }
-//       o <<= 2;
       o <<= ((3 - i) * 6);
       a |= o;
     }
