@@ -2,12 +2,14 @@
   "name": "Base64",
   "files": [
     {
-      "directory": "/home/bumbuna/Desktop/Base64",
+      "directory": "/home/bumbuna/projects/Base64",
       "filters": [
         "*.c",
         "*.h",
         "*.in",
-        "CMakeLists.txt"
+        "CMakeLists.txt",
+		"*.md",
+		"*.markdown"
       ]
     }
   ],

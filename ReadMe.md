@@ -22,9 +22,11 @@ $ cmake --install build
 
 - executable
 ```bash
-$ base64e [option] <file> ...
---encode, -e  encode files
---decode, -d  decode files
+$ base64ed [option] [file] ...
+[options]
+    -d  decode files
+    -v  version info
+    -h  help
 ```
 
 - library

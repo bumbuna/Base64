@@ -22,21 +22,27 @@ function(base64test str fname)
 		execute_process(COMMAND base64 -w 0
 						OUTPUT_VARIABLE out
 						INPUT_FILE ${fname}
+						OUTPUT_FILE "${fname}.64"
 						WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 				)
-		string(STRIP ${out} out)
-
+		string(STRIP "${out}" out)
 		add_test(NAME "TEST_${fname}"
 				COMMAND base64ed ${fname}
 				WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
 				)
-		set_tests_properties(TEST_${fname} PROPERTIES PASS_REGULAR_EXPRESSION ${out})
+		set_tests_properties(TEST_${fname} PROPERTIES PASS_REGULAR_EXPRESSION "${out}")
+		add_test(NAME "TEST_${fname}_d"
+				COMMAND base64ed -d "${fname}.64"
+				WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+		)
+		set_tests_properties("TEST_${fname}_d" PROPERTIES PASS_REGULAR_EXPRESSION "^${str}")
+
 endfunction()
 
 file(STRINGS test/testfile.txt lines)
 set(lineCount 0)
 foreach(line ${lines})
-	#string(STRIP ${line} line)
+	string(STRIP ${line} line)
 	base64test(${line} ${lineCount})
 	math(EXPR lineCount "${lineCount}+1")
 endforeach()
